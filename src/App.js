@@ -34,6 +34,7 @@ function App() {
         <Todo key={todo.id} id={todo.id} item={todo.item} completed={todo.done} />
       ))}
       {(status === "done") && <button className='flex space-x-1 bg-[#EB5757] rounded-[4px] ml-8 hover:bg-[#EB5759] shadow-md px-8 py-4 text-sm text-white self-end transition duration-100 ease-in-out' onClick={deleteAll}><TrashIcon className='h-5' /> delete all</button>}
+      <footer className="font-xs px-6"><p>created by <b>Michelle031</b> - devChallenges.io </p></footer>
     </div>
   );
 }
