@@ -1,56 +1,39 @@
-import React from 'react';
-import logo from './logo.svg';
-import { Counter } from './features/counter/Counter';
+import React, {useEffect} from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import './App.css';
+import Input from './components/Input';
+import Nav from './components/Nav';
+import Todo from './components/Todo';
+import { setFilteredList, todoSelector, setTodoList } from './features/todoSlice';
+import { TrashIcon } from "@heroicons/react/outline";
 
 function App() {
+  const {filteredList, status, todoList} = useSelector(todoSelector);
+  const dispatch = useDispatch();
+
+
+
+  useEffect(() => {
+		localStorage.setItem('todos', JSON.stringify(todoList));
+	}, [todoList]);
+
+  
+  const deleteAll = () => {
+    dispatch(setFilteredList(filteredList.filter(todo => todo.done === false)));
+    dispatch(setTodoList(todoList.filter(todo => todo.done === false)));
+    console.log(todoList);
+    console.log(filteredList);
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <Counter />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <span>
-          <span>Learn </span>
-          <a
-            className="App-link"
-            href="https://reactjs.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux-toolkit.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux Toolkit
-          </a>
-          ,<span> and </span>
-          <a
-            className="App-link"
-            href="https://react-redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React Redux
-          </a>
-        </span>
-      </header>
+    <div className="max-w-2xl mx-auto px-6 md:px-0 text-center text-[#333333] flex flex-col justify-center mt-10">
+      <h1 className='font-bold text-4xl mb-8'>#todo</h1>
+      <Nav />
+      {(status !== "done") && <Input />}
+      {filteredList.map(todo => (
+        <Todo key={todo.id} id={todo.id} item={todo.item} completed={todo.done} />
+      ))}
+      {(status === "done") && <button className='flex space-x-1 bg-[#EB5757] rounded-[4px] ml-8 hover:bg-[#EB5759] shadow-md px-8 py-4 text-sm text-white self-end transition duration-100 ease-in-out' onClick={deleteAll}><TrashIcon className='h-5' /> delete all</button>}
     </div>
   );
 }
